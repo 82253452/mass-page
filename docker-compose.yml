@@ -1,0 +1,13 @@
+version: "3"
+networks:
+  default:
+    external:
+      name: default-network
+services:
+  com42page:
+    container_name: drone-com42page
+    image: swr.cn-north-1.myhuaweicloud.com/a82253452/com42page
+    labels:
+      - traefik.http.routers.com42page.rule=Host(`zhihuizhan.net`)
+      - traefik.http.routers.com42page.tls.certresolver=mytlschallenge
+
