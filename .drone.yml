@@ -21,7 +21,7 @@ steps:
   - name: build-dist
     image: node:10
     commands:
-      - npm run build
+      - npm run build:prod
 
   - name: rebuild-cache
     image: drillster/drone-volume-cache
@@ -50,7 +50,7 @@ steps:
       username: root
       password: Sdfasiwek2#@8123
       port: 222
-      target: /projects/myapp
+      target: /projects/com42page
       source: docker-compose.yml
 
   - name: code-deploy
