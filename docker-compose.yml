@@ -4,10 +4,10 @@ networks:
     external:
       name: default-network
 services:
-  com42page:
-    container_name: drone-com42page
-    image: swr.cn-north-1.myhuaweicloud.com/a82253452/com42page
+  mass-page:
+    container_name: drone-mass-page
+    image: swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page
     labels:
-      - traefik.http.routers.com42page.rule=Host(`admin.zhihuizhan.net`)
-      - traefik.http.routers.com42page.tls.certresolver=mytlschallenge
+      - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
+      - traefik.http.routers.mass-page.tls.certresolver=mytlschallenge
 

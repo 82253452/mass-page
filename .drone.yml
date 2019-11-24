@@ -46,22 +46,22 @@ steps:
   - name: code-scp
     image: appleboy/drone-scp
     settings:
-      host: 114.115.250.201
+      host: 121.36.56.213
       username: root
-      password: Sdfasiwek2#@8123
-      port: 222
-      target: /projects/com42page
+      password: Yp82253452
+      port: 22
+      target: /opt/projects/xxl-job
       source: docker-compose.yml
 
   - name: code-deploy
     image: appleboy/drone-ssh
     settings:
-      host: 114.115.250.201
+      host: 121.36.56.213
       username: root
-      password: Sdfasiwek2#@8123
-      port: 222
+      password: Yp82253452
+      port: 22
       script:
-        - cd /projects/com42page
+        - cd /opt/projects/xxl-job
         - docker-compose pull
         - docker-compose up -d --force-recreate
 
