@@ -49,7 +49,7 @@ steps:
       username: root
       password: Yp82253452
       port: 22
-      target: /opt/projects/xxl-job
+      target: /opt/projects/mass-page
       source: docker-compose.yml
 
   - name: code-deploy
@@ -60,7 +60,7 @@ steps:
       password: Yp82253452
       port: 22
       script:
-        - cd /opt/projects/xxl-job
+        - cd /opt/projects/mass-page
         - docker-compose pull
         - docker-compose up -d --force-recreate
 
