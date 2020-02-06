@@ -11,10 +11,11 @@ services:
     image: swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page
     networks:
       - back
-    labels:
-      - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
-      - traefik.http.middlewares.mass-page-http.redirectscheme.scheme=https_redirect
+    deploy:
+      labels:
+        - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
+        - traefik.http.middlewares.mass-page-http.redirectscheme.scheme=https_redirect
 
-      - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
-      - traefik.http.routers.mass-page.tls.certresolver=mytlschallenge
+        - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
+        - traefik.http.routers.mass-page.tls.certresolver=mytlschallenge
 
