@@ -2,12 +2,16 @@ version: "3"
 networks:
   default:
     external:
-      name: default-network
+      name: swarm-net
 services:
   mass-page:
-    container_name: drone-mass-page
     image: swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page
+    networks:
+      - default-network
     labels:
+      - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
+      - traefik.http.middlewares.mass-page-http.redirectscheme.scheme=https_redirect
+
       - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
       - traefik.http.routers.mass-page.tls.certresolver=mytlschallenge
 
