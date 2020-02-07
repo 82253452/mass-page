@@ -11,7 +11,7 @@ services:
         - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
         - traefik.http.middlewares.mass-page-http.redirectscheme.scheme=https_redirect
 
-        - traefik.http.services.ware-page.loadbalancer.server.port=80
+        - traefik.http.services.mass-page.loadbalancer.server.port=80
         - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
         - traefik.http.routers.mass-page.tls.certresolver=mytlschallenge
 
