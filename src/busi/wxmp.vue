@@ -42,9 +42,9 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="文章类型" width="150">
+      <el-table-column align="center" label="栏目" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.type }}</span>
+          <span>{{ getColumnsLabel(scope.row.columnId) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标题" width="150">
