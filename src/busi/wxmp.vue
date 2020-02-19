@@ -9,7 +9,7 @@
         @keyup.enter.native="handleFilter"/>
       <el-select
         v-model="listQuery.column"
-        placeholder="请选择栏目">
+        placeholder="选择栏目">
         <el-option
           v-for="(item,index) in columns"
           :key="index"
