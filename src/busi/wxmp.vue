@@ -7,6 +7,16 @@
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"/>
+      <el-select
+        v-model="listQuery.column"
+        placeholder="请选择栏目">
+        <el-option
+          v-for="(item,index) in columns"
+          :key="index"
+          :value="item"
+          :label="getColumnsLabel(item)"
+        />
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -155,6 +165,7 @@
 import { selectByPage, insert, selectById, updateById, deleteById } from '@/api/wxmp'
 import waves from '@/directive/waves' // 水波纹指令
 import { parseTime } from '@/utils'
+import { getColumns } from '../api/busiApp'
 
 export default {
   name: 'ComplexTable',
@@ -182,11 +193,13 @@ export default {
         update: 'Edit',
         create: 'Create'
       },
-      rules: {}
+      rules: {},
+      columns: []
     }
   },
   created() {
     this.getList()
+    this.getColumn()
   },
   methods: {
     getList() {
@@ -195,6 +208,44 @@ export default {
         this.list = response.list
         this.total = response.total
         this.listLoading = false
+      })
+    },
+    getColumnsLabel(v) {
+      if (v) {
+        if (v == 1) {
+          return '1电竞游戏中心'
+        } else if (v == 2) {
+          return '2生活健康小常识'
+        } else if (v == 3) {
+          return '3石雕奇石'
+        } else if (v == 4) {
+          return '4周易国学家'
+        } else if (v == 5) {
+          return '5电动汽车报价大全'
+        } else if (v == 6) {
+          return '6SUV汽车大全'
+        } else if (v == 7) {
+          return '7古玩收藏交易古董鉴定'
+        } else if (v == 8) {
+          return '8佛心慧语精选'
+        } else if (v == 9) {
+          return '9传奇故事会'
+        } else if (v == 10) {
+          return '10广场舞教学合集'
+        } else if (v == 11) {
+          return '11搞笑相声小品大全'
+        } else if (v == 12) {
+          return '12健身视频集锦'
+        } else if (v == 13) {
+          return '13古筝名曲欣赏'
+        }
+        return v
+      }
+      return ''
+    },
+    getColumn() {
+      getColumns().then(resp => {
+        this.columns = resp.list
       })
     },
     handleFilter() {

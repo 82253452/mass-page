@@ -62,8 +62,8 @@ steps:
       port: 22
       script:
         - cd /opt/projects/mass-page
-        - docker stack deploy -c docker-compose.yml mass-page --with-registry-auth
-#        - docker service update --image swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page mass-page_mass-page --with-registry-auth
+#        - docker stack deploy -c docker-compose.yml mass-page --with-registry-auth
+        - docker service update --image swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page mass-page_mass-page --with-registry-auth
 
 volumes:
   - name: cache
