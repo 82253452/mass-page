@@ -33,6 +33,8 @@ steps:
       - name: cache
         path: /cache
 
+
+
   - name: build
     image: plugins/docker
     settings:
@@ -43,27 +45,12 @@ steps:
       repo: swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page
       auto_tag: true
 
-  - name: code-scp
-    image: appleboy/drone-scp
-    settings:
-      host: 121.36.56.213
-      username: root
-      password: Yp82253452
-      port: 22
-      target: /opt/projects/mass-page
-      source: docker-compose.yml
+  - name: up
+    image: alpine
+    commands:
+      #        - docker stack deploy -c docker-compose.yml mass-page
+      - docker service update --image swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page mass-page_mass-page --with-registry-auth
 
-  - name: code-deploy
-    image: appleboy/drone-ssh
-    settings:
-      host: 121.36.56.213
-      username: root
-      password: Yp82253452
-      port: 22
-      script:
-        - cd /opt/projects/mass-page
-#        - docker stack deploy -c docker-compose.yml mass-page --with-registry-auth
-        - docker service update --image swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page mass-page_mass-page --with-registry-auth
 
 volumes:
   - name: cache
