@@ -4,14 +4,26 @@ networks:
     external:
       name: swarm-net
 services:
-  mass-page:
-    image: swr.cn-north-1.myhuaweicloud.com/a82253452/mass-page
+  service:
+    image: ${IMAGE}
     deploy:
+      resources:
+        limits:
+          memory: 500M
+        reservations:
+          memory: 500M
       labels:
-        - traefik.http.routers.mass-page-http.rule=Host(`mass.zhihuizhan.net`)
-        - traefik.http.middlewares.mass-page-http.redirectscheme.scheme=https_redirect
+        - traefik.http.finder=true
 
-        - traefik.http.services.mass-page.loadbalancer.server.port=80
-        - traefik.http.routers.mass-page.rule=Host(`mass.zhihuizhan.net`)
-        - traefik.http.routers.mass-page.tls.certresolver=mytlschallenge
+          - traefik.http.routers.${DRONE_STAGE_NAME}-${DRONE_BRANCH}-http.rule=Host(`${DOMAIN}`)
+          - traefik.http.services.${DRONE_STAGE_NAME}-${DRONE_BRANCH}-http.loadbalancer.server.port=${PORT}
+          - traefik.http.middlewares.${DRONE_STAGE_NAME}-${DRONE_BRANCH}-http.redirectscheme.scheme=https_redirect
 
+          - traefik.http.routers.${DRONE_STAGE_NAME}-${DRONE_BRANCH}-https.rule=Host(`${DOMAIN}`)
+          - traefik.http.services.${DRONE_STAGE_NAME}-${DRONE_BRANCH}-https.loadbalancer.server.port=${PORT}
+          - traefik.http.routers.${DRONE_STAGE_NAME}-${DRONE_BRANCH}-https.tls.certresolver=mytlschallenge
+    environment:
+      SPRING_PROFILES_ACTIVE: ${PROFILE}
+      PORT: ${PORT}
+    volumes:
+      - /etc/localtime:/etc/localtime

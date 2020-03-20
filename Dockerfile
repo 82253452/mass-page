@@ -1,2 +1,6 @@
 FROM nginx:alpine
-COPY dist /usr/share/nginx/html/
+
+ARG APPDIR
+COPY ${APPDIR} /usr/share/nginx/html/
+
+EXPOSE ${PORT}
