@@ -9,7 +9,6 @@ environment:
   PORT: 80
 
 steps:
-
   - name: restore-cache
     image: drillster/drone-volume-cache
     settings:
