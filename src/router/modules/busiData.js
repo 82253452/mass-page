@@ -30,6 +30,12 @@ const busiRouter = {
       component: () => import('@/busi/wxmp'),
       name: 'wxmp',
       meta: { title: '采集数据' }
+    },
+    {
+      path: 'talentPool',
+      component: () => import('@/busi/talentPool'),
+      name: 'talentPool',
+      meta: { title: '人才库' }
     }
   ]
 }
