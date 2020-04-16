@@ -69,11 +69,21 @@
           <span>{{ scope.row.sc }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="基本信息" min-width="250">
+      <el-table-column align="center" label="专业" min-width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.base }}</span>
+          <span>{{ scope.row.major }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="学历" min-width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.education }}</span>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column align="center" label="基本信息" min-width="250">-->
+      <!--        <template slot-scope="scope">-->
+      <!--          <span>{{ scope.row.base }}</span>-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column align="center" label="刷新时间" min-width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime| parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
