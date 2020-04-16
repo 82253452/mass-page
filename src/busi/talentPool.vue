@@ -8,6 +8,7 @@
         @keyup.enter.native="handleFilter"/>
       <el-select
         v-model="listQuery.sc"
+        filterable
         placeholder="选择学校">
         <el-option
           v-for="(item,index) in scs"
@@ -18,6 +19,7 @@
       </el-select>
       <el-select
         v-model="listQuery.major"
+        filterable
         placeholder="选择专业">
         <el-option
           v-for="(item,index) in majors"
