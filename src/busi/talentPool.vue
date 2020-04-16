@@ -74,9 +74,9 @@
           <span>{{ scope.row.base }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="ctime" min-width="150">
+      <el-table-column align="center" label="刷新时间" min-width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.ctime| parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.updateTime| parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标记" min-width="150">
