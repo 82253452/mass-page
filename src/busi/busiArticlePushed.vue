@@ -7,6 +7,26 @@
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"/>
+      <el-select
+        v-model="listQuery.column"
+        placeholder="选择栏目">
+        <el-option
+          v-for="(item,index) in columns"
+          :key="index"
+          :value="item.code"
+          :label="item.title"
+        />
+      </el-select>
+      <el-select
+        v-model="listQuery.type"
+        placeholder="文章类型">
+        <el-option
+          :value="1"
+          label="文章"/>
+        <el-option
+          :value="0"
+          label="视频"/>
+      </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
@@ -27,14 +47,14 @@
       fit
       highlight-current-row
       style="width: 100%;min-height:500px;">
-      <el-table-column align="center" label="id" width="150">
+      <el-table-column align="center" label="id" fixed="left" width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="小程序" width="150">
+      <el-table-column align="center" label="栏目" width="150">
         <template slot-scope="scope">
-          <span>{{ getAppName(scope.row.appId) }}</span>
+          <span>{{ getColumnName(scope.row.columnId) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标题" width="150">
@@ -42,16 +62,52 @@
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="分类" width="150">
+      <el-table-column align="center" label="缩略图" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.tag }}</span>
+          <span>{{ scope.row.thumbnail }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="是否推荐" width="150">
+      <el-table-column align="center" label="摘要" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.recommend?'是':'否' }}</span>
+          <span>{{ scope.row.summary }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="视频ID" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.videoId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="作者" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.auther }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="栏目" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.columnId }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="ctime" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.ctime| parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="状态0 默认 1已采 2已发" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.status }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="更新时间" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.mtime| parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="是否删除" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.delete }}</span>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="操作" fixed="right" width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
@@ -74,96 +130,46 @@
     </div>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :model="temp" :rules="rules" class="form-container">
-        <div class="createPost-main-container">
-          <el-row>
-            <el-col :span="24">
-              <el-form-item
-                :rules="[{ required: true, message: '请输入标题', trigger: 'blur' }]"
-                style="margin-bottom: 40px;"
-                prop="title"
-              >
-                <MDinput v-model="temp.title" :maxlength="100" name="name" maxlength="20" required>
-                  标题
-                </MDinput>
-              </el-form-item>
-
-              <el-form-item
-                :rules="[{ required: true, message: '请输入分类', trigger: 'blur' }]"
-                style="margin-bottom: 40px;"
-                label-width="60px"
-                label="分类:"
-                prop="tag"
-              >
-                <el-input
-                  :rows="1"
-                  v-model="temp.tag"
-                  type="textarea"
-                  class="article-textarea"
-                  autosize
-                  placeholder="请输入内容"/>
-                <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字以内</span>
-              </el-form-item>
-
-              <el-form-item
-                :rules="[{ required: true, message: '请上传缩略图', trigger: 'blur' }]"
-                style="margin-bottom: 40px;"
-                label-width="60px"
-                label="缩略图:"
-                prop="img"
-              >
-                <qiniuImage v-model="temp.img"/>
-              </el-form-item>
-
-              <div class="postInfo-container">
-                <el-row>
-                  <el-col :span="8">
-                    <el-form-item
-                      :rules="[{ required: true, message: '请选择小程序', trigger: 'blur' }]"
-                      label-width="80px"
-                      label="小程序:"
-                      class="postInfo-container-item"
-                      prop="appId"
-                    >
-                      <el-select v-model="temp.appId" placeholder="Select">
-                        <el-option
-                          v-for="(item,v) in apps"
-                          :key="item"
-                          :label="item"
-                          :value="v"/>
-                      </el-select>
-                    </el-form-item>
-                  </el-col>
-                  <el-col :span="8">
-                    <el-form-item label-width="80px" label="是否推荐:" class="postInfo-container-item">
-                      <el-switch
-                        v-model="temp.recommend"
-                        :active-value="1"
-                        :inactive-value="0"
-                        active-color="#13ce66"/>
-                    </el-form-item>
-                  </el-col>
-
-                  <el-col :span="8">
-                    <el-form-item label-width="60px" label="权重:" class="postInfo-container-item">
-                      <el-rate
-                        v-model="temp.weight"
-                        :max="10"
-                        :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                        :low-threshold="1"
-                        :high-threshold="10"
-                        style="margin-top:8px;"/>
-                    </el-form-item>
-                  </el-col>
-                </el-row>
-              </div>
-            </el-col>
-          </el-row>
-
-          <div class="editor-container">
-            <Tinymce ref="editor" :height="400" v-model="temp.content"/>
-          </div>
-        </div>
+      <el-form
+        ref="dataForm"
+        :rules="rules"
+        :model="temp"
+        label-position="left"
+        label-width="70px"
+        style="width: 400px; margin-left:50px;">
+        <el-form-item
+          :rules="[{ required: true, message: '设为头条', trigger: 'blur' }]"
+          label="头条"
+          prop="isTop">
+          <el-switch
+            v-model="temp.isTop"
+            active-color="#13ce66"
+            inactive-color="#ff4949"/>
+        </el-form-item>
+        <el-form-item label="文章类型" prop="type">
+          <el-input v-model="temp.type"/>
+        </el-form-item>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="temp.title"/>
+        </el-form-item>
+        <el-form-item label="缩略图" prop="thumbnail">
+          <el-input v-model="temp.thumbnail"/>
+        </el-form-item>
+        <el-form-item label="摘要" prop="summary">
+          <el-input v-model="temp.summary"/>
+        </el-form-item>
+        <el-form-item label="视频ID" prop="videoId">
+          <el-input v-model="temp.videoId"/>
+        </el-form-item>
+        <el-form-item label="作者" prop="auther">
+          <el-input v-model="temp.auther"/>
+        </el-form-item>
+        <el-form-item label="栏目" prop="columnId">
+          <el-input v-model="temp.columnId"/>
+        </el-form-item>
+        <el-form-item label="状态0 默认 1已采 2已发" prop="status">
+          <el-input v-model="temp.status"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
@@ -175,37 +181,29 @@
 </template>
 
 <script>
-import { selectByPage, insert, selectById, updateById, deleteById, getApps } from '@/api/busiArticle'
+import { selectByPage, insert, updateById, deleteById } from '@/api/wxmp'
 import waves from '@/directive/waves' // 水波纹指令
-import { parseTime } from '@/utils'
-import Tinymce from '@/components/Tinymce'
-import MDinput from '@/components/MDinput'
-import { validateURL } from '@/utils/validate'
-import { fetchArticle } from '@/api/article'
-import { userSearch } from '@/api/remoteSearch'
-import qiniuImage from './components/qiniuImage'
+import { selectAll as getColumnsAll } from '@/api/columns'
 
 export default {
   name: 'ComplexTable',
-  components: { Tinymce, MDinput, qiniuImage },
   directives: {
     waves
   },
-  filters: {},
   data() {
     return {
       tableKey: 0,
       list: null,
       total: null,
       listLoading: true,
-      contentShortLength: 6,
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 20,
         importance: undefined,
         title: undefined,
         type: undefined,
-        sort: '+id'
+        sort: '+id',
+        del: 1
       },
       temp: {},
       dialogFormVisible: false,
@@ -215,35 +213,29 @@ export default {
         create: 'Create'
       },
       rules: {},
-      apps: {}
+      columns: []
     }
   },
   created() {
-    console.log(this.$route.query)
-    console.log(this.$route.params)
     this.getList()
-    this.getApps()
+    this.getColumn()
   },
   methods: {
-    getApps() {
-      getApps({ type: 2 }).then(data => {
-        this.apps = data
-      })
-    },
-    getAppName: function(appId) {
-      if (appId) {
-        if (this.apps[appId]) {
-          return this.apps[appId]
-        }
-      }
-      return '无'
-    },
     getList() {
       this.listLoading = true
-      selectByPage(this.listQuery).then(data => {
-        this.list = data.list
-        this.total = data.total
+      selectByPage(this.listQuery).then(response => {
+        this.list = response.list
+        this.total = response.total
         this.listLoading = false
+      })
+    },
+    getColumnName(id) {
+      const column = this.columns.find(c => c.code == id)
+      return column ? column.title : id
+    },
+    getColumn() {
+      getColumnsAll().then(resp => {
+        this.columns = resp
       })
     },
     handleFilter() {
@@ -259,7 +251,7 @@ export default {
       this.getList()
     },
     handleDelete(row, status) {
-      deleteById({ id: row.id }).then(data => {
+      deleteById({ id: row.id }).then(response => {
         this.list.splice(this.list.indexOf(row), 1)
         this.$message({
           message: '操作成功',
@@ -296,6 +288,7 @@ export default {
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
+      this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -306,6 +299,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           updateById(tempData).then(() => {
             this.getList()
             this.dialogFormVisible = false

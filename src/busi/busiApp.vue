@@ -194,8 +194,8 @@
             <el-option
               v-for="(item,index) in columns"
               :key="index"
-              :value="item"
-              :label="getColumnsLabel(item)"
+              :value="item.code"
+              :label="item.title"
             />
           </el-select>
         </el-form-item>
@@ -204,6 +204,15 @@
             v-model="messageTemp.comment"
             active-color="#13ce66"
             inactive-color="#ff4949"/>
+        </el-form-item>
+        <el-form-item label="是否发布文章" label-width="100px">
+          <el-switch
+            v-model="messageTemp.isPush"
+            active-color="#13ce66"
+            inactive-color="#ff4949"/>
+        </el-form-item>
+        <el-form-item label="原文链接" label-width="100px">
+          <el-input v-model="messageTemp.contentSourceUrl"/>
         </el-form-item>
         <el-form-item
           :rules="[{ required: true, message: '时间不能为空', trigger: 'blur' }]"
@@ -229,15 +238,21 @@
           <el-tag
             v-for="(tag,i) in (messageTemp.types?messageTemp.types.split('-'):[])"
             :key="i"
-            :type="tag==0?'info':tag==1?'warning':''"
+            :type="tag==='0'?'info':tag==='1'?'warning':'danger'"
             closable
             @close="removeTypes(i)">
-            {{ tag==0?'视频':tag==1?'文章':'' }}
+            {{ ({0:'视频',
+                 1:'文章',
+                 2:'视频头条',
+                 3:'文章头条',
+            }[tag]) }}
           </el-tag>
         </el-form-item>
         <el-button-group>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" icon="el-icon-plus" @click="addTypes(0)">视频</el-button>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" icon="el-icon-plus" @click="addTypes(1)">文章</el-button>
+          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" size="mini" type="primary" icon="el-icon-plus" @click="addTypes(0)">视频</el-button>
+          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" size="mini" type="primary" icon="el-icon-plus" @click="addTypes(1)">文章</el-button>
+          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(2)">视频头条</el-button>
+          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(3)">文章头条</el-button>
         </el-button-group>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -313,6 +328,8 @@ import {
   getColumns
 } from '@/api/busiApp'
 import waves from '@/directive/waves' // 水波纹指令
+import { selectAll as getColumnsAll } from '@/api/columns'
+
 import { parseTime } from '@/utils'
 import VueQrcode from '@chenfengyuan/vue-qrcode'
 import checkPermission from '@/utils/permission'
@@ -397,7 +414,7 @@ export default {
       pushWeappShow: false,
       itemList: [],
       pushTemp: {},
-      messageTemp: { type: 0, time: '00:00', num: 5, types: '' },
+      messageTemp: { type: 0, time: '00:00', num: 5, types: '', topNum: 2 },
       messageTypes: [{ name: '视频', type: '0' }, { name: '文章', type: '1' }],
       itemIndex: '',
       isAdmin: this.checkPer(['admin']),
@@ -419,45 +436,14 @@ export default {
       if (this.messageTemp.types === '') {
         this.messageTemp.types = type + ''
       } else {
-        this.messageTemp.types += '-' + type
+        if (type > 1) {
+          this.messageTemp.types = type + '-' + this.messageTemp.types
+        } else { this.messageTemp.types += '-' + type }
       }
-    },
-    getColumnsLabel(v) {
-      if (v) {
-        if (v == 1) {
-          return '1电竞游戏中心'
-        } else if (v == 2) {
-          return '2生活健康小常识'
-        } else if (v == 3) {
-          return '3石雕奇石'
-        } else if (v == 4) {
-          return '4周易国学家'
-        } else if (v == 5) {
-          return '5电动汽车报价大全'
-        } else if (v == 6) {
-          return '6SUV汽车大全'
-        } else if (v == 7) {
-          return '7古玩收藏交易古董鉴定'
-        } else if (v == 8) {
-          return '8佛心慧语精选'
-        } else if (v == 9) {
-          return '9传奇故事会'
-        } else if (v == 10) {
-          return '10广场舞教学合集'
-        } else if (v == 11) {
-          return '11搞笑相声小品大全'
-        } else if (v == 12) {
-          return '12健身视频集锦'
-        } else if (v == 13) {
-          return '13古筝名曲欣赏'
-        }
-        return v
-      }
-      return ''
     },
     getColumn() {
-      getColumns().then(resp => {
-        this.columns = resp.list
+      getColumnsAll().then(resp => {
+        this.columns = resp
       })
     },
     autoMessageButton() {
@@ -489,12 +475,19 @@ export default {
         if (this.messageTemp.comment && this.messageTemp.comment == 'true') {
           this.messageTemp.comment = true
         }
+        if (this.messageTemp.isPush && this.messageTemp.isPush == 'true') {
+          this.messageTemp.isPush = true
+        }
         if (this.messageTemp.types == null) {
           this.$set(this.messageTemp, 'types', '')
         }
+        if (!this.messageTemp.topNum) {
+          this.$set(this.messageTemp, 'topNum', 2)
+        }
       } else {
         this.messageTemp = {
-          appId: appId
+          appId: appId,
+          topNum: 2
         }
       }
       this.autoMessageShow = true

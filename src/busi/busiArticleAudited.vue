@@ -13,8 +13,8 @@
         <el-option
           v-for="(item,index) in columns"
           :key="index"
-          :value="item.code"
-          :label="item.title"
+          :value="item"
+          :label="getColumnsLabel(item)"
         />
       </el-select>
       <el-select
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column align="center" label="栏目" width="150">
         <template slot-scope="scope">
-          <span>{{ getColumnName(scope.row.columnId) }}</span>
+          <span>{{ getColumnsLabel(scope.row.columnId) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标题" width="150">
@@ -173,7 +173,8 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{ $t('table.confirm') }}</el-button>
+        <el-button v-if="dialogStatus=='create'" type="primary" @click="createData">{{ $t('table.confirm') }}
+        </el-button>
         <el-button v-else type="primary" @click="updateData">{{ $t('table.confirm') }}</el-button>
       </div>
     </el-dialog>
@@ -181,9 +182,10 @@
 </template>
 
 <script>
-import { selectByPage, insert, updateById, deleteById } from '@/api/wxmp'
-import { selectAll as getColumnsAll } from '@/api/columns'
+import { selectByPage, insert, selectById, updateById, deleteById } from '@/api/wxmp'
 import waves from '@/directive/waves' // 水波纹指令
+import { parseTime } from '@/utils'
+import { getColumns } from '../api/busiApp'
 
 export default {
   name: 'ComplexTable',
@@ -202,8 +204,8 @@ export default {
         importance: undefined,
         title: undefined,
         type: undefined,
-        del: 0,
-        sort: '+id'
+        sort: '+id',
+        del: 0
       },
       temp: {},
       dialogFormVisible: false,
@@ -229,13 +231,42 @@ export default {
         this.listLoading = false
       })
     },
-    getColumnName(id) {
-      const column = this.columns.find(c => c.code == id)
-      return column ? column.title : id
+    getColumnsLabel(v) {
+      if (v) {
+        if (v == 1) {
+          return '1电竞游戏中心'
+        } else if (v == 2) {
+          return '2生活健康小常识'
+        } else if (v == 3) {
+          return '3石雕奇石'
+        } else if (v == 4) {
+          return '4周易国学家'
+        } else if (v == 5) {
+          return '5电动汽车报价大全'
+        } else if (v == 6) {
+          return '6SUV汽车大全'
+        } else if (v == 7) {
+          return '7古玩收藏交易古董鉴定'
+        } else if (v == 8) {
+          return '8佛心慧语精选'
+        } else if (v == 9) {
+          return '9传奇故事会'
+        } else if (v == 10) {
+          return '10广场舞教学合集'
+        } else if (v == 11) {
+          return '11搞笑相声小品大全'
+        } else if (v == 12) {
+          return '12健身视频集锦'
+        } else if (v == 13) {
+          return '13古筝名曲欣赏'
+        }
+        return v
+      }
+      return ''
     },
     getColumn() {
-      getColumnsAll().then(resp => {
-        this.columns = resp
+      getColumns().then(resp => {
+        this.columns = resp.list
       })
     },
     handleFilter() {

@@ -1,10 +1,10 @@
 import request from '@/utils/request'
 
-const space='/sysRole'
+const space = '/sysRole'
 
 export function selectByPage(query) {
   return request({
-    url: space+'/selectByPage',
+    url: space + '/selectByPage',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function selectByPage(query) {
 
 export function insert(data) {
   return request({
-    url: space+'/insert',
+    url: space + '/insert',
     method: 'post',
     data
   })
@@ -20,7 +20,7 @@ export function insert(data) {
 
 export function selectById(query) {
   return request({
-    url: space+'/selectById',
+    url: space + '/selectById',
     method: 'get',
     params: query
   })
@@ -28,7 +28,7 @@ export function selectById(query) {
 
 export function updateById(data) {
   return request({
-    url: space+'/updateById',
+    url: space + '/updateById',
     method: 'post',
     data
   })
@@ -36,7 +36,7 @@ export function updateById(data) {
 
 export function deleteById(data) {
   return request({
-    url: space+'/deleteById',
+    url: space + '/deleteById',
     method: 'post',
     data
   })

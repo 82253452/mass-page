@@ -29,7 +29,19 @@ const busiRouter = {
       path: 'wxmp',
       component: () => import('@/busi/wxmp'),
       name: 'wxmp',
-      meta: { title: '采集数据' }
+      meta: { title: '公众号文章数据' }
+    },
+    {
+      path: 'columns',
+      component: () => import('@/busi/columns'),
+      name: 'columns',
+      meta: { title: '分类管理' }
+    },
+    {
+      path: 'busiArticle/pushed',
+      component: () => import('@/busi/busiArticlePushed'),
+      name: 'wxmpPushed',
+      meta: { title: '公众号文章已发布数据' }
     },
     {
       path: 'talentPool',

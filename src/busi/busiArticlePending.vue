@@ -13,8 +13,8 @@
         <el-option
           v-for="(item,index) in columns"
           :key="index"
-          :value="item.code"
-          :label="item.title"
+          :value="item"
+          :label="getColumnsLabel(item)"
         />
       </el-select>
       <el-select
@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column align="center" label="栏目" width="150">
         <template slot-scope="scope">
-          <span>{{ getColumnName(scope.row.columnId) }}</span>
+          <span>{{ getColumnsLabel(scope.row.columnId) }}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="标题" width="150">
@@ -108,11 +108,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" fixed="right" width="150" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" fixed="right" min-width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row,'deleted')">{{ $t('table.delete') }}
-          </el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row,'deleted')">{{ $t('table.delete') }}</el-button>
+          <el-button size="mini" type="warning" @click="handleAudite(scope.row)">审核通过</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -181,9 +181,10 @@
 </template>
 
 <script>
-import { selectByPage, insert, updateById, deleteById } from '@/api/wxmp'
-import { selectAll as getColumnsAll } from '@/api/columns'
+import { selectByPage, insert, selectById, updateById, deleteById } from '@/api/wxmp'
 import waves from '@/directive/waves' // 水波纹指令
+import { parseTime } from '@/utils'
+import { getColumns } from '../api/busiApp'
 
 export default {
   name: 'ComplexTable',
@@ -202,8 +203,9 @@ export default {
         importance: undefined,
         title: undefined,
         type: undefined,
-        del: 0,
-        sort: '+id'
+        sort: '+id',
+        status: 0,
+        del: 0
       },
       temp: {},
       dialogFormVisible: false,
@@ -229,13 +231,42 @@ export default {
         this.listLoading = false
       })
     },
-    getColumnName(id) {
-      const column = this.columns.find(c => c.code == id)
-      return column ? column.title : id
+    getColumnsLabel(v) {
+      if (v) {
+        if (v == 1) {
+          return '1电竞游戏中心'
+        } else if (v == 2) {
+          return '2生活健康小常识'
+        } else if (v == 3) {
+          return '3石雕奇石'
+        } else if (v == 4) {
+          return '4周易国学家'
+        } else if (v == 5) {
+          return '5电动汽车报价大全'
+        } else if (v == 6) {
+          return '6SUV汽车大全'
+        } else if (v == 7) {
+          return '7古玩收藏交易古董鉴定'
+        } else if (v == 8) {
+          return '8佛心慧语精选'
+        } else if (v == 9) {
+          return '9传奇故事会'
+        } else if (v == 10) {
+          return '10广场舞教学合集'
+        } else if (v == 11) {
+          return '11搞笑相声小品大全'
+        } else if (v == 12) {
+          return '12健身视频集锦'
+        } else if (v == 13) {
+          return '13古筝名曲欣赏'
+        }
+        return v
+      }
+      return ''
     },
     getColumn() {
-      getColumnsAll().then(resp => {
-        this.columns = resp
+      getColumns().then(resp => {
+        this.columns = resp.list
       })
     },
     handleFilter() {
@@ -253,6 +284,16 @@ export default {
     handleDelete(row, status) {
       deleteById({ id: row.id }).then(response => {
         this.list.splice(this.list.indexOf(row), 1)
+        this.$message({
+          message: '操作成功',
+          type: 'success'
+        })
+      })
+    },
+    handleAudite(row) {
+      row.status = 1
+      updateById(row).then(response => {
+        this.getList()
         this.$message({
           message: '操作成功',
           type: 'success'

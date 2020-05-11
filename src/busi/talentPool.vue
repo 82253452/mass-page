@@ -106,9 +106,9 @@
 
     <div class="pagination-container" style="text-align: center">
       <el-pagination
-        :current-page="listQuery.pageNum"
+        :current-page="listQuery.page"
         :page-sizes="[10,20,30, 50]"
-        :page-size="listQuery.pageSize"
+        :page-size="listQuery.limit"
         :total="total"
         background
         layout="total, sizes, prev, pager, next, jumper"
@@ -135,8 +135,8 @@ export default {
       total: null,
       listLoading: true,
       listQuery: {
-        pageNum: 1,
-        pageSize: 20,
+        page: 1,
+        limit: 20,
         importance: undefined,
         title: undefined,
         type: undefined,
@@ -187,15 +187,15 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.pageNum = 1
+      this.listQuery.page = 1
       this.getList()
     },
     handleSizeChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     },
     handleCurrentChange(val) {
-      this.listQuery.pageNum = val
+      this.listQuery.page = val
       this.getList()
     },
     resetTemp() {
