@@ -1,8 +1,11 @@
 <template>
   <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
     <textarea :id="tinymceId" class="tinymce-textarea"/>
+    <!--    <div class="editor-custom-btn-container">-->
+    <!--      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>-->
+    <!--    </div>-->
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
+      <el-button type="primary" size="mini" @click="insertMiniapp">插入小程序</el-button>
     </div>
   </div>
 </template>
@@ -85,6 +88,14 @@ export default {
     this.destroyTinymce()
   },
   methods: {
+    insertMiniapp() {
+      this.$prompt('请输入appId', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(({ value }) => {
+        window.tinymce.get(this.tinymceId).insertContent(`<p class="my-custem-appId" style="width:300px;height:150px;line-height:150px;text-align:center;box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .5)">${value}</p><p></p>`)
+      })
+    },
     initTinymce() {
       const _this = this
       window.tinymce.init({

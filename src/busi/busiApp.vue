@@ -91,7 +91,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" fixed="right" width="350" class-name="small-padding fixed-width">
+      <el-table-column align="center" label="操作" fixed="right" min-width="150" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-popover
             v-if="scope.row.miniProgramInfo===2 && (scope.row.status===2
@@ -120,9 +120,12 @@
           <el-button
             v-if="checkPer(['weArticle','admin'])&&scope.row.miniProgramInfo===1"
             type="primary"
+            size="mini"
             @click="autoMessageClick(scope.row)">
-            {{ scope.row.autoMessage===0?'开启自动推送文章':'关闭自动推送文章' }}
+            {{ scope.row.autoMessage===0?'开启推送':'关闭推送' }}
           </el-button>
+          <ArticleCommon v-model="scope.row.headerText" @confirm="updateData(scope.row)">编辑头部</ArticleCommon>
+          <ArticleCommon v-model="scope.row.footerText" :top="false" @confirm="updateData(scope.row)">编辑底部</ArticleCommon>
           <el-button
             v-if="checkPer(['question'])&&(scope.row.miniProgramInfo===1&&!scope.row.replay)"
             type="primary"
@@ -312,11 +315,9 @@
 import {
   selectByPage,
   insert,
-  selectById,
   updateById,
   deleteById,
   Generator,
-  Download,
   getAppPages,
   getAuthUrl,
   pushWeappByAppId,
@@ -324,10 +325,10 @@ import {
   getItemList,
   releaseApp,
   autoMessageApi,
-  closeMessageApi,
-  getColumns
+  closeMessageApi
 } from '@/api/busiApp'
 import waves from '@/directive/waves' // 水波纹指令
+import ArticleCommon from './components/ArticleCommon' // 水波纹指令
 import { selectAll as getColumnsAll } from '@/api/columns'
 
 import { parseTime } from '@/utils'
@@ -337,7 +338,8 @@ import checkPermission from '@/utils/permission'
 export default {
   name: 'ComplexTable',
   components: {
-    VueQrcode
+    VueQrcode,
+    ArticleCommon
   },
   directives: {
     waves
@@ -646,22 +648,16 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    updateData() {
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
-          updateById(tempData).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
+    updateData(row) {
+      updateById(row).then(() => {
+        this.getList()
+        this.dialogFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     }
   }
