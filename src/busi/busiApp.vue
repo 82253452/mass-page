@@ -124,8 +124,7 @@
             @click="autoMessageClick(scope.row)">
             {{ scope.row.autoMessage===0?'开启推送':'关闭推送' }}
           </el-button>
-          <ArticleCommon v-model="scope.row.headerText" @confirm="updateData(scope.row)">编辑头部</ArticleCommon>
-          <ArticleCommon v-model="scope.row.footerText" :top="false" @confirm="updateData(scope.row)">编辑底部</ArticleCommon>
+
           <el-button
             v-if="checkPer(['question'])&&(scope.row.miniProgramInfo===1&&!scope.row.replay)"
             type="primary"
@@ -150,6 +149,11 @@
           <el-button size="mini" type="danger" @click="handleDelete(scope.row,'deleted')">{{
           $t('table.delete') }}
           </el-button>
+          <el-row>
+            <el-col :span="12"><ArticleCommon v-model="scope.row.headerText" @confirm="updateData(scope.row)">编辑头部</ArticleCommon></el-col>
+            <el-col :span="12"><ArticleCommon v-model="scope.row.footerText" :top="false" @confirm="updateData(scope.row)">编辑底部</ArticleCommon></el-col>
+          </el-row>
+
         </template>
       </el-table-column>
     </el-table>

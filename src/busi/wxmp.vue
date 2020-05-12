@@ -82,9 +82,15 @@
           <span>{{ scope.row.auther }}</span>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="栏目" width="150">
+      <el-table-column align="center" label="头条" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.columnId }}</span>
+          <el-switch
+            v-model="scope.row.isTop"
+            :active-value="1"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="changeTop(scope.row)"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="ctime" width="150">
@@ -142,6 +148,8 @@
           label="头条"
           prop="isTop">
           <el-switch
+            :active-value="1"
+            :inactive-value="0"
             v-model="temp.isTop"
             active-color="#13ce66"
             inactive-color="#ff4949"/>
@@ -221,6 +229,16 @@ export default {
     this.getColumn()
   },
   methods: {
+    changeTop(row) {
+      updateById(row).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
     getList() {
       this.listLoading = true
       selectByPage(this.listQuery).then(response => {
