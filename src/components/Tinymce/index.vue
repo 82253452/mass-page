@@ -4,9 +4,9 @@
     <!--    <div class="editor-custom-btn-container">-->
     <!--      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>-->
     <!--    </div>-->
-    <div class="editor-custom-btn-container">
-      <el-button type="primary" size="mini" @click="insertMiniapp">插入小程序</el-button>
-    </div>
+<!--    <div class="editor-custom-btn-container">-->
+<!--      <el-button type="primary" size="mini" @click="insertMiniapp">插入小程序</el-button>-->
+<!--    </div>-->
   </div>
 </template>
 
