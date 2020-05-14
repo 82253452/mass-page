@@ -435,12 +435,10 @@ export default {
       this.messageTemp.types = typesArray.join('-')
     },
     addTypes(type) {
-      if (this.messageTemp.types === '') {
-        this.messageTemp.types = type + ''
+      if (this.messageTemp.types) {
+        this.messageTemp.types = type + '-' + this.messageTemp.types
       } else {
-        if (type > 1) {
-          this.messageTemp.types = type + '-' + this.messageTemp.types
-        } else { this.messageTemp.types += '-' + type }
+        this.messageTemp.types = type + ''
       }
     },
     getColumn() {
