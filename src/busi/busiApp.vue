@@ -175,21 +175,6 @@
         label-position="left"
         label-width="70px"
         style="width: 400px; margin-left:50px;">
-        <!--<el-form-item label="类型"-->
-        <!--prop="type"-->
-        <!--:rules="[{ required: true, message: '类型不能为空', trigger: 'blur' }]">-->
-        <!--<el-select-->
-        <!--v-model="messageTemp.type"-->
-        <!--placeholder="请选择类型"-->
-        <!--@change="pushItemChange">-->
-        <!--<el-option-->
-        <!--v-for="(item,index) in messageTypes"-->
-        <!--:key="index"-->
-        <!--:value="item.type"-->
-        <!--:label="item.name"-->
-        <!--/>-->
-        <!--</el-select>-->
-        <!--</el-form-item>-->
         <el-form-item
           :rules="[{ required: true, message: '栏目不能为空', trigger: 'blur' }]"
           label="栏目"
@@ -233,11 +218,18 @@
             value-format="yyyy-MM-dd HH:mm:ss"
             placeholder="请选择时间"/>
         </el-form-item>
-        <!--<el-form-item label="数量"-->
-        <!--prop="num"-->
-        <!--:rules="[{ required: true, message: '数量不能为空', trigger: 'blur' }]">-->
-        <!--<el-input-number v-model="messageTemp.num" :min="1" :max="8" label="描述文字"/>-->
-        <!--</el-form-item>-->
+        <el-form-item
+          v-if="messageTemp.types.split('-').some(t=>t==4||t==5)"
+          label="小程序appId"
+          prop="time">
+          <el-input v-model="messageTemp.miniAppId"/>
+        </el-form-item>
+        <el-form-item
+          v-if="messageTemp.types.split('-').some(t=>t==4||t==5)"
+          label="小程序路径"
+          prop="time">
+          <el-input v-model="messageTemp.miniAppPath"/>
+        </el-form-item>
         <el-form-item
           :rules="[{ required: true, message: '图文列表不能为空', trigger: 'blur' }]"
           label="图文列表"
@@ -252,6 +244,8 @@
                  1:'文章',
                  2:'视频头条',
                  3:'文章头条',
+                 4:'小程序视频',
+                 5:'小程序头条视频'
             }[tag]) }}
           </el-tag>
         </el-form-item>
@@ -260,6 +254,8 @@
           <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" size="mini" type="primary" icon="el-icon-plus" @click="addTypes(1)">文章</el-button>
           <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(2)">视频头条</el-button>
           <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(3)">文章头条</el-button>
+          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(4)">小程序视频</el-button>
+          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(5)">小程序头条视频</el-button>
         </el-button-group>
       </el-form>
       <div slot="footer" class="dialog-footer">
