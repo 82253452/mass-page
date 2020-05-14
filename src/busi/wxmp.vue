@@ -59,6 +59,22 @@
       </el-table-column>
       <el-table-column align="center" label="标题" width="150">
         <template slot-scope="scope">
+          <span>{{ scope.row.type==0?'视频':'文章' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="头条" width="150">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.isTop"
+            :active-value="1"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#ff4949"
+            @change="changeTop(scope.row)"/>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="标题" width="150">
+        <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
@@ -80,17 +96,6 @@
       <el-table-column align="center" label="作者" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.auther }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="头条" width="150">
-        <template slot-scope="scope">
-          <el-switch
-            v-model="scope.row.isTop"
-            :active-value="1"
-            :inactive-value="0"
-            active-color="#13ce66"
-            inactive-color="#ff4949"
-            @change="changeTop(scope.row)"/>
         </template>
       </el-table-column>
       <el-table-column align="center" label="ctime" width="150">
