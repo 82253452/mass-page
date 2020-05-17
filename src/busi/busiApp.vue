@@ -440,6 +440,7 @@ export default {
       } else {
         this.messageTemp.types = type + ''
       }
+
     },
     getColumn() {
       getColumnsAll().then(resp => {
