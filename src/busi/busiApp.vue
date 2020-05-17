@@ -219,13 +219,13 @@
             placeholder="请选择时间"/>
         </el-form-item>
         <el-form-item
-          v-if="messageTemp.types.split('-').some(t=>t==4||t==5)"
+          v-if="messageTemp.types && messageTemp.types.split('-').some(t=>t==4||t==5)"
           label="小程序appId"
           prop="time">
           <el-input v-model="messageTemp.miniAppId"/>
         </el-form-item>
         <el-form-item
-          v-if="messageTemp.types.split('-').some(t=>t==4||t==5)"
+          v-if="messageTemp.types && messageTemp.types.split('-').some(t=>t==4||t==5)"
           label="小程序路径"
           prop="time">
           <el-input v-model="messageTemp.miniAppPath"/>
