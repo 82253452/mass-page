@@ -478,7 +478,7 @@ export default {
         if (this.messageTemp.isPush && this.messageTemp.isPush == 'true') {
           this.messageTemp.isPush = true
         }
-        if (this.messageTemp.types == null) {
+        if (!this.messageTemp.types) {
           this.$set(this.messageTemp, 'types', '')
         }
         if (!this.messageTemp.topNum) {
