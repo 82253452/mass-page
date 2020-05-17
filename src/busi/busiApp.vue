@@ -487,7 +487,10 @@ export default {
       } else {
         this.messageTemp = {
           appId: appId,
-          topNum: 2
+          topNum: 2,
+          types: '',
+          isPush: true,
+          comment: true
         }
       }
       this.autoMessageShow = true
