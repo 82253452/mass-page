@@ -436,11 +436,10 @@ export default {
     },
     addTypes(type) {
       if (this.messageTemp.types) {
-        this.messageTemp.types = type + '-' + this.messageTemp.types
+        this.messageTemp.types = this.messageTemp.types + '-' + type
       } else {
         this.messageTemp.types = type + ''
       }
-
     },
     getColumn() {
       getColumnsAll().then(resp => {
