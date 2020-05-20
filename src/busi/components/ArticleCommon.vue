@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-button size="mini" type="primary" @click="showDia"><slot/></el-button>
-    <el-dialog :visible.sync="dialogStatus" width="1000px">
+    <el-dialog :visible.sync="dialogStatus" append-to-body width="1000px">
       <el-row :gutter="20">
         <el-col :span="8">
           <div style="width:100%;min-height:500px;border-radius: 10px;box-shadow: 1px 1px 3px rgba(0,0,0,.5);">
@@ -15,7 +15,7 @@
           </div>
         </el-col>
         <el-col :span="16">
-          <Tinymce v-model="value" :height="400" menubar="" onchange=""/>
+          <Tinymce v-if="dialogStatus" v-model="value" :height="400" menubar="" onchange=""/>
         </el-col>
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -50,6 +50,7 @@ export default {
 
   watch: {
     value(val) {
+      console.log(val)
       this.$emit('input', val)
     }
   },
