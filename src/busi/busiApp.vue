@@ -219,13 +219,13 @@
             placeholder="请选择时间"/>
         </el-form-item>
         <el-form-item
-          v-if="messageTemp.types.split('-').some(t=>t==4||t==5)"
+          v-if="messageTemp.types && messageTemp.types.split('-').some(t=>t==4||t==5)"
           label="小程序appId"
           prop="time">
           <el-input v-model="messageTemp.miniAppId"/>
         </el-form-item>
         <el-form-item
-          v-if="messageTemp.types.split('-').some(t=>t==4||t==5)"
+          v-if="messageTemp.types && messageTemp.types.split('-').some(t=>t==4||t==5)"
           label="小程序路径"
           prop="time">
           <el-input v-model="messageTemp.miniAppPath"/>
@@ -436,7 +436,7 @@ export default {
     },
     addTypes(type) {
       if (this.messageTemp.types) {
-        this.messageTemp.types = type + '-' + this.messageTemp.types
+        this.messageTemp.types = this.messageTemp.types + '-' + type
       } else {
         this.messageTemp.types = type + ''
       }
@@ -478,7 +478,7 @@ export default {
         if (this.messageTemp.isPush && this.messageTemp.isPush == 'true') {
           this.messageTemp.isPush = true
         }
-        if (this.messageTemp.types == null) {
+        if (!this.messageTemp.types) {
           this.$set(this.messageTemp, 'types', '')
         }
         if (!this.messageTemp.topNum) {
@@ -487,7 +487,10 @@ export default {
       } else {
         this.messageTemp = {
           appId: appId,
-          topNum: 2
+          topNum: 2,
+          types: '',
+          isPush: true,
+          comment: true
         }
       }
       this.autoMessageShow = true
