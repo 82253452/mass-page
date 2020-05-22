@@ -4,6 +4,8 @@ import Layout from '@/views/layout/Layout'
 import busiRouter from './modules/busi'
 import busiData from './modules/busiData'
 import weAppData from './modules/weAppData'
+import system from './modules/system'
+import article from './modules/article'
 
 Vue.use(Router)
 
@@ -66,6 +68,8 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  article,
+  system,
   busiRouter,
   busiData,
   weAppData,

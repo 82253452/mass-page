@@ -3,21 +3,21 @@
 import Layout from '@/views/layout/Layout'
 
 const busiRouter = {
-  path: '/article',
+  path: '/system',
   component: Layout,
   redirect: 'noredirect',
-  name: 'data',
+  name: 'weapp',
   meta: {
-    title: '编辑',
+    title: '系统管理',
     icon: 'component',
-    roles: ['article']
+    roles: ['admin']
   },
   children: [
     {
-      path: 'busiArticle/wxmpList',
-      component: () => import('@/busi/wxmpList'),
-      name: 'wxmpList',
-      meta: { title: '文章流' }
+      path: 'sysUserRole',
+      component: () => import('@/busi/sysUserRole'),
+      name: 'sysUserRole',
+      meta: { title: '用户管理' }
     }
   ]
 }

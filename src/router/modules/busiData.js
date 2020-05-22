@@ -32,6 +32,12 @@ const busiRouter = {
       meta: { title: '公众号文章数据' }
     },
     {
+      path: 'wxmpList',
+      component: () => import('@/busi/wxmpList'),
+      name: 'wxmp',
+      meta: { title: '文章数据流' }
+    },
+    {
       path: 'columns',
       component: () => import('@/busi/columns'),
       name: 'columns',
