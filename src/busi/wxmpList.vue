@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { selectByPage, insert, updateById, deleteById } from '@/api/wxmp'
+import { selectCurrentByPage, insert, updateById, deleteById } from '@/api/wxmp'
 import { selectAll as getColumnsAll } from '@/api/columns'
 import waves from '@/directive/waves' // 水波纹指令
 
@@ -137,7 +137,7 @@ export default {
     },
     getList() {
       this.listLoading = true
-      selectByPage(this.listQuery).then(response => {
+      selectCurrentByPage(this.listQuery).then(response => {
         this.list = [...this.list, ...response.list]
         this.total = response.total
         this.listLoading = false

@@ -10,6 +10,14 @@ export function selectByPage(query) {
   })
 }
 
+export function selectCurrentByPage(query) {
+  return request({
+    url: space + '/selectCurrentByPage',
+    method: 'get',
+    params: query
+  })
+}
+
 export function insert(data) {
   return request({
     url: space + '/insert',
