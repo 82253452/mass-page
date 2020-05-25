@@ -108,6 +108,7 @@ export default {
         del: 0,
         sort: '+id'
       },
+      hasNextPage: true,
       url: '',
       temp: {},
       dialogFormVisible: false,
@@ -125,8 +126,10 @@ export default {
   },
   methods: {
     load() {
-      this.listQuery.page++
-      this.getList()
+      if (this.hasNextPage) {
+        this.listQuery.page++
+        this.getList()
+      }
     },
     previewArticle(o) {
       this.dialogFormVisible = true
@@ -150,6 +153,7 @@ export default {
       selectCurrentByPage(this.listQuery).then(response => {
         this.list = [...this.list, ...response.list]
         this.total = response.total
+        this.hasNextPage = response.hasNextPage
         this.listLoading = false
       })
     },
