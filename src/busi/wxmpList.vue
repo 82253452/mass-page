@@ -51,13 +51,23 @@
                       <span style="color:#333;font-size: 14px;font-weight: bold">{{ getColumnName(o.columnId) }}</span>
                       <time class="time" style="color:#999999;font-size: 12px;">{{ o.mtime| parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</time>
                     </div>
-                    <el-switch
-                      v-model="o.isTop"
-                      :active-value="1"
-                      :inactive-value="0"
-                      active-color="#13ce66"
-                      inactive-color="#999"
-                      @change="changeTop(o)"/>
+                    <div style="display: flex;align-items: center">
+                      <el-switch
+                        v-model="o.isTop"
+                        :active-value="1"
+                        :inactive-value="0"
+                        active-color="#13ce66"
+                        inactive-color="#999"
+                        @change="changeTop(o)"/>
+                      <el-popconfirm
+                        title="确定删除吗？"
+                        @onConfirm="handleDelete(o)"
+                      >
+                        <div slot="reference" style="color:#999999;font-size: 12px;margin-left:10px;">
+                          删除
+                        </div>
+                      </el-popconfirm>
+                    </div>
                   </div>
                 </div>
               </el-card>
