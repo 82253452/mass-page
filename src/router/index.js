@@ -42,6 +42,11 @@ export const constantRouterMap = [
     hidden: true
   },
   {
+    path: '/unemp/alert/:appId',
+    component: () => import('@/busi/alertMsg'),
+    hidden: true
+  },
+  {
     path: '',
     component: Layout,
     redirect: 'index',
