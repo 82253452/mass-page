@@ -2,7 +2,9 @@
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span style = "font-weight: bold">{{ appData.nickName }}</span>
+        <span style = "font-weight: bold">
+          <el-avatar :size="15" :src="appData.headImg" style="papdding-top:20px"/>
+          {{ appData.nickName }}</span>
         <el-button style="float: right; padding: 3px 0" type="text" @click="reSend">重新发送</el-button>
       </div>
       <div class="text item" style="margin-top:20px">
@@ -13,10 +15,10 @@
         <span style="font-weight: bold">时间：</span>
         <span style="font-size: 14px;color:#999;font-weight: bold">{{ appData.messageParam| getTime }} </span>
       </div>
-      <div class="text item" style="margin-top:20px">
-        <spapn style="font-weight: bold">原因：</spapn>
-        <span style="font-size: 14px;color:#999;font-weight: bold">发送失败 </span>
-      </div>
+      <!--      <div class="text item" style="margin-top:20px">-->
+      <!--        <spapn style="font-weight: bold">原因：</spapn>-->
+      <!--        <span style="font-size: 14px;color:#999;font-weight: bold">发送失败 </span>-->
+      <!--      </div>-->
     </el-card>
   </div>
 </template>
