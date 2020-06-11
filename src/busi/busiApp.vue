@@ -44,6 +44,18 @@
           <span>{{ scope.row.nickName }}</span>
         </template>
       </el-table-column>
+      <el-table-column align="center" label="启用" width="150">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.autoMessage"
+            :active-value="1"
+            :inactive-value="0"
+            active-color="#13ce66"
+            inactive-color="#999"
+            @change="changeAutoMessage(scope.row)"/>
+        </template>
+      </el-table-column>
+
       <el-table-column align="center" label="简介" width="150">
         <template slot-scope="scope">
           <el-tooltip
@@ -122,7 +134,7 @@
             type="primary"
             size="mini"
             @click="autoMessageClick(scope.row)">
-            {{ scope.row.autoMessage===0?'开启推送':'关闭推送' }}
+            推送配置
           </el-button>
 
           <el-button
@@ -150,8 +162,13 @@
           $t('table.delete') }}
           </el-button>
           <el-row style="margin-top:20px;">
-            <el-col :span="12"><ArticleCommon v-model="scope.row.headerText" @confirm="updateData(scope.row)">编辑头部</ArticleCommon></el-col>
-            <el-col :span="12"><ArticleCommon v-model="scope.row.footerText" :top="false" @confirm="updateData(scope.row)">编辑底部</ArticleCommon></el-col>
+            <el-col :span="12">
+              <ArticleCommon v-model="scope.row.headerText" @confirm="updateData(scope.row)">编辑头部</ArticleCommon>
+            </el-col>
+            <el-col :span="12">
+              <ArticleCommon v-model="scope.row.footerText" :top="false" @confirm="updateData(scope.row)">编辑底部
+              </ArticleCommon>
+            </el-col>
           </el-row>
 
         </template>
@@ -168,7 +185,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"/>
     </div>
-    <el-dialog :visible.sync="autoMessageShow" title="自动推送文章">
+    <el-dialog :visible.sync="autoMessageShow" title="推送配置">
       <el-form
         ref="messageForm"
         :model="messageTemp"
@@ -250,12 +267,48 @@
           </el-tag>
         </el-form-item>
         <el-button-group>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" size="mini" type="primary" icon="el-icon-plus" @click="addTypes(0)">视频</el-button>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" size="mini" type="primary" icon="el-icon-plus" @click="addTypes(1)">文章</el-button>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(2)">视频头条</el-button>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(3)">文章头条</el-button>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(4)">小程序视频</el-button>
-          <el-button v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8" type="primary" size="mini" icon="el-icon-plus" @click="addTypes(5)">小程序头条视频</el-button>
+          <el-button
+            v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8"
+            size="mini"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addTypes(0)">视频
+          </el-button>
+          <el-button
+            v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8"
+            size="mini"
+            type="primary"
+            icon="el-icon-plus"
+            @click="addTypes(1)">文章
+          </el-button>
+          <el-button
+            v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8"
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="addTypes(2)">视频头条
+          </el-button>
+          <el-button
+            v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8"
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="addTypes(3)">文章头条
+          </el-button>
+          <el-button
+            v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8"
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="addTypes(4)">小程序视频
+          </el-button>
+          <el-button
+            v-show="(messageTemp.types?messageTemp.types.split('-'):[]).length<8"
+            type="primary"
+            size="mini"
+            icon="el-icon-plus"
+            @click="addTypes(5)">小程序头条视频
+          </el-button>
         </el-button-group>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -429,6 +482,12 @@ export default {
     this.getColumn()
   },
   methods: {
+    changeAutoMessage(row) {
+      updateById(row).then(() => this.$message({
+        message: '操作成功',
+        type: 'success'
+      }))
+    },
     removeTypes(index) {
       const typesArray = this.messageTemp.types.split('-')
       typesArray.splice(index, 1)
@@ -449,7 +508,7 @@ export default {
     autoMessageButton() {
       this.$refs['messageForm'].validate((valid) => {
         if (valid) {
-          autoMessageApi(this.messageTemp).then(resp => {
+          updateById({ id: this.temp.id, messageParam: JSON.stringify(this.messageTemp) }).then(resp => {
             this.autoMessageShow = false
             this.getList()
           })
@@ -457,19 +516,20 @@ export default {
       })
     },
     autoMessageClick(row) {
+      this.temp = row
       const param = row.messageParam
       const appId = row.appId
-      if (row.autoMessage === 1) {
-        closeMessageApi(row).then(resp => {
-          this.autoMessageShow = false
-          this.getList()
-          this.$message({
-            message: '关闭成功',
-            type: 'success'
-          })
-        })
-        return
-      }
+      // if (row.autoMessage === 1) {
+      //   closeMessageApi(row).then(resp => {
+      //     this.autoMessageShow = false
+      //     this.getList()
+      //     this.$message({
+      //       message: '关闭成功',
+      //       type: 'success'
+      //     })
+      //   })
+      //   return
+      // }
       if (param) {
         this.messageTemp = JSON.parse(param)
         if (this.messageTemp.comment && this.messageTemp.comment == 'true') {
