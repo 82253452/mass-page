@@ -41,6 +41,9 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
         {{ $t('table.search') }}
       </el-button>
+      <el-button v-waves class="filter-item" type="primary" @click="handleExport">
+        导出
+      </el-button>
     </div>
 
     <el-table
@@ -163,6 +166,9 @@ export default {
     this.getMajors()
   },
   methods: {
+    handleExport() {
+      window.open('https://mass.zhihuizhan.net/api/talent/exportExcel')
+    },
     getList() {
       this.listLoading = true
       selectByPage(this.listQuery).then(response => {
