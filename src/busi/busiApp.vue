@@ -130,7 +130,7 @@
             @click="releaseWeapp(scope.row.appId)">发布
           </el-button>
           <el-button
-            v-if="checkPer(['weArticle','admin'])&&scope.row.miniProgramInfo===1"
+            v-if="scope.row.miniProgramInfo===1"
             type="primary"
             size="mini"
             @click="autoMessageClick(scope.row)">
